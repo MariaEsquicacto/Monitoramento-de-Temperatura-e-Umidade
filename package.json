@@ -1,0 +1,28 @@
+{
+  "name": "hospital-iot-telemetry",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test:alarm": "tsx scripts/test-alarm-simulation.ts"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.8",
+    "firebase": "^11.4.0",
+    "lucide": "^0.475.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^0.21.1",
+    "workbox-window": "^7.3.0"
+  }
+}

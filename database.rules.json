@@ -1,0 +1,18 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    "rooms": {
+      "$roomId": {
+        "current": {
+          ".read": "auth != null",
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['temperature', 'humidity', 'timestamp'])"
+        },
+        "heartbeat": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Funções auxiliares de controle de acesso (RBAC)
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Verifica se o usuário autenticado possui o papel de Administrador
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    // Coleção de usuários: cada usuário pode gerenciar seu próprio perfil; leitura para autenticados
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Configurações das faixas operacionais das salas (temperatura e umidade)
+    // Conforme requisito do projeto:
+    // - Administrador pode visualizar e alterar os limites.
+    // - Usuário Comum pode apenas visualizar as informações.
+    match /room_configs/{roomId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Histórico de leituras estruturadas para cálculo estatístico e gráficos históricos
+    match /readings_history/{readingId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Registro persistente de anomalias e alertas hospitalares
+    match /alerts/{alertId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+  }
+}
